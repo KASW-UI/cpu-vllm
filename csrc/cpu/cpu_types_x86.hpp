@@ -634,6 +634,35 @@ struct FP32Vec16 : public Vec<FP32Vec16> {
 
   explicit FP32Vec16(__m256 low, __m256 high) : reg_low(low), reg_high(high) {}
 
+  explicit FP32Vec16(int64_t value, const FP32Vec16& lut) {
+    int64_t mask_0 = 0x0F0F0F0F0F0F0F0F;
+    int64_t mask_1 = 0xF0F0F0F0F0F0F0F0;
+    int64_t value_0 = value & mask_0;
+    int64_t value_1 = value & mask_1;
+    __m128i vec_0 = _mm_set_epi64x(0, value_0);
+    __m128i vec_1 = _mm_set_epi64x(0, value_1);
+    vec_0 = _mm_cvtepu8_epi16(vec_0);
+    vec_1 = _mm_cvtepu8_epi16(vec_1);
+    vec_1 = _mm_slli_epi16(vec_1, 4);
+    __m128i vec = _mm_or_si128(vec_0, vec_1);
+    __m256i indices_lo = _mm256_cvtepu8_epi32(vec);
+    __m256i indices_hi =
+        _mm256_cvtepu8_epi32(_mm_bsrli_si128(vec, 8));
+    __m256i idx_adj =
+        _mm256_sub_epi32(indices_lo, _mm256_set1_epi32(8));
+    __m256 mask = _mm256_castsi256_ps(
+        _mm256_cmpgt_epi32(indices_lo, _mm256_set1_epi32(7)));
+    __m256 lo_val = _mm256_permutevar8x32_ps(lut.reg_low, indices_lo);
+    __m256 hi_val = _mm256_permutevar8x32_ps(lut.reg_high, idx_adj);
+    reg_low = _mm256_blendv_ps(lo_val, hi_val, mask);
+    idx_adj = _mm256_sub_epi32(indices_hi, _mm256_set1_epi32(8));
+    mask = _mm256_castsi256_ps(
+        _mm256_cmpgt_epi32(indices_hi, _mm256_set1_epi32(7)));
+    lo_val = _mm256_permutevar8x32_ps(lut.reg_low, indices_hi);
+    hi_val = _mm256_permutevar8x32_ps(lut.reg_high, idx_adj);
+    reg_high = _mm256_blendv_ps(lo_val, hi_val, mask);
+  }
+
   explicit FP32Vec16(const FP32Vec4& data)
       : reg_low((__m256)_mm256_inserti128_si256(
             _mm256_castsi128_si256((__m128i)data.reg), (__m128i)data.reg, 1)),

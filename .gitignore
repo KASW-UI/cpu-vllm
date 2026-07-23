@@ -21,6 +21,9 @@ vllm/third_party/fmha_sm100/
 # triton jit
 .triton
 
+# model files
+opt-125m/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

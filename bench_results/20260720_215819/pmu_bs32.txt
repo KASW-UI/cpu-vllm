@@ -1,0 +1,20 @@
+# started on Mon Jul 20 21:59:08 2026
+
+
+ Performance counter stats for '/home/kasw/workspace/cpu-vllm-infra/.venv/bin/python benchmark.py --batch-size 32 --output-dir bench_results/20260720_215819 --no-csv':
+
+    20,251,659,461      cpu_atom/cycles/                                                        (30.53%)
+    28,241,796,877      cpu_core/cycles/                                                        (69.47%)
+    10,631,682,997      cpu_atom/instructions/           #    0.52  insn per cycle              (30.53%)
+    36,172,760,394      cpu_core/instructions/           #    1.28  insn per cycle              (69.47%)
+     1,526,047,773      cpu_atom/branches/                                                      (30.53%)
+     7,228,937,821      cpu_core/branches/                                                      (69.47%)
+        13,868,455      cpu_atom/branch-misses/          #    0.91% of all branches             (30.53%)
+       125,948,425      cpu_core/branch-misses/          #    1.74% of all branches             (69.47%)
+
+       3.809254018 seconds time elapsed
+
+       5.807201000 seconds user
+       0.368315000 seconds sys
+
+

@@ -169,6 +169,15 @@ def cpu_platform_plugin() -> str | None:
                 "Confirmed CPU platform is available because vLLM is built with CPU."
             )
         if not is_cpu:
+            import os
+
+            is_cpu = os.environ.get("VLLM_TARGET_DEVICE", "") == "cpu"
+            if is_cpu:
+                logger.debug(
+                    "Confirmed CPU platform is available because "
+                    "VLLM_TARGET_DEVICE=cpu env is set."
+                )
+        if not is_cpu:
             import sys
 
             is_cpu = sys.platform.startswith("darwin")

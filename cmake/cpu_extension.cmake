@@ -484,6 +484,7 @@ if (ENABLE_X86_ISA)
         "csrc/cpu/spec_decode_utils.cpp"
         "csrc/cpu/cpu_attn.cpp"
         "csrc/cpu/dnnl_kernels.cpp"
+        "csrc/cpu/cpu_wna16.cpp"
         "csrc/cpu/torch_bindings.cpp"
         # TODO: Remove these files
         "csrc/cpu/activation.cpp"
